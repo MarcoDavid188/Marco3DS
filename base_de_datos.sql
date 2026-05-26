@@ -1,7 +1,7 @@
--- Usar la base de datos
+
 USE sistema_inventario;
 
--- 1. Tabla usuarios
+
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_completo VARCHAR(100) NOT NULL,
@@ -10,13 +10,13 @@ CREATE TABLE usuarios (
     rol VARCHAR(20) NOT NULL
 );
 
--- 2. Tabla categorias
+
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_categoria VARCHAR(50) NOT NULL UNIQUE
 );
 
--- 3. Tabla productos con llave foránea
+
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_producto VARCHAR(100) NOT NULL,
@@ -24,20 +24,52 @@ CREATE TABLE productos (
     stock INT NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
 
-    FOREIGN KEY (categoria_id)
-    REFERENCES categorias(id)
-);
-
--- 4. Insertar categorías
+    
 INSERT INTO categorias (nombre_categoria)
 VALUES
 ('Computadoras'),
 ('Accesorios'),
 ('Oficina');
 
--- 5. Insertar productos
+
 INSERT INTO productos
 (nombre_producto, categoria_id, stock, precio)
 VALUES
 ('Laptop Dell Inspiron 15', 1, 15, 720.00),
 ('Mouse Inalambrico Logitech', 2, 25, 12.00);
+
+
+SELECT p.id,
+       p.nombre_producto,
+       c.nombre_categoria,
+       p.stock,
+       p.precio
+FROM productos p
+INNER JOIN categorias c
+ON p.categoria_id = c.id;
+
+SELECT p.id,
+       p.nombre_producto,
+       c.nombre_categoria,
+       p.stock,
+       p.precio
+FROM productos p
+INNER JOIN categorias c
+ON p.categoria_id = c.id
+WHERE c.nombre_categoria = 'Accesorios';
+
+
+SELECT * FROM productos;
+
+
+SELECT * FROM categorias;
+
+
+
+
+SELECT p.nombre_producto,
+       c.nombre_categoria,
+       p.precio
+FROM productos p
+INNER JOIN categorias c
+ON p.categoria_id = c.id;
