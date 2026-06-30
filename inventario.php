@@ -1,37 +1,28 @@
-```php
+
 <?php
 
 session_start();
 
-if(!isset($_SESSION['user_id'])){
-
-header("Location:index.php");
-
-exit();
-
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
 }
 
 require_once("conexion.php");
 
-$sql="SELECT
+$sql = "SELECT
 p.id,
 p.nombre_producto,
 c.nombre_categoria,
 p.stock,
 p.precio
-
 FROM productos p
-
 INNER JOIN categorias c
-
-ON p.categoria_id=c.id
-
+ON p.categoria_id = c.id
 ORDER BY p.id ASC";
 
-$resultado=$conn->query($sql);
-
+$resultado = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 
 <html lang="es">
@@ -132,6 +123,31 @@ font-weight:bold;
 
 }
 
+
+.btn-eliminar{
+
+background:#ef4444;
+
+color:white;
+
+padding:6px 12px;
+
+text-decoration:none;
+
+border-radius:5px;
+
+font-size:13px;
+
+font-weight:bold;
+
+}
+
+.btn-eliminar:hover{
+
+background:#b91c1c;
+
+}
+
 </style>
 
 </head>
@@ -198,6 +214,8 @@ Cerrar Sesión
 <th>Stock</th>
 
 <th>Precio</th>
+
+<th>Acciones</th>
 
 </tr>
 
@@ -272,7 +290,19 @@ $fila["precio"],
 ?>
 
 </td>
+<td>
 
+<a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
+
+class="btn-eliminar"
+
+onclick="return confirm('¿Estás seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
+
+🗑️ Eliminar
+
+</a>
+
+</td>
 </tr>
 
 <?php
@@ -285,7 +315,7 @@ $fila["precio"],
 
 <tr>
 
-<td colspan="5">
+<td colspan="6">
 
 No hay productos registrados.
 
