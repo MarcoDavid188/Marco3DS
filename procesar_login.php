@@ -46,7 +46,7 @@ $_SESSION["rol"]=
 $row["rol"];
 
 header(
-"Location:test_dashboard.php"
+"Location: dashboard.php"
 );
 
 exit();
