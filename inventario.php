@@ -10,18 +10,60 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once("conexion.php");
 
-$sql = "SELECT
-p.id,
-p.nombre_producto,
-c.nombre_categoria,
-p.stock,
-p.precio
-FROM productos p
-INNER JOIN categorias c
-ON p.categoria_id = c.id
-ORDER BY p.id ASC";
+// Obtener el término de búsqueda
+$busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 
-$resultado = $conn->query($sql);
+if ($busqueda != '') {
+
+    // Buscar por nombre de producto o categoría
+    $sql = "SELECT
+            p.id,
+            p.nombre_producto,
+            c.nombre_categoria,
+            p.stock,
+            p.precio
+            FROM productos p
+            INNER JOIN categorias c
+            ON p.categoria_id = c.id
+            WHERE p.nombre_producto LIKE ?
+            OR c.nombre_categoria LIKE ?
+            ORDER BY p.id ASC";
+
+    // Preparar la consulta
+    $stmt = $conn->prepare($sql);
+
+    // Agregar los comodines %
+    $param_busqueda = "%" . $busqueda . "%";
+
+    // Vincular los parámetros
+    $stmt->bind_param("ss", $param_busqueda, $param_busqueda);
+
+    // Ejecutar consulta
+    $stmt->execute();
+
+    // Obtener resultados
+    $resultado = $stmt->get_result();
+
+    $stmt->close();
+
+} else {
+
+    // Si no hay búsqueda, mostrar todos los productos
+    $sql = "SELECT
+            p.id,
+            p.nombre_producto,
+            c.nombre_categoria,
+            p.stock,
+            p.precio
+            FROM productos p
+            INNER JOIN categorias c
+            ON p.categoria_id = c.id
+            ORDER BY p.id ASC";
+
+    $resultado = $conn->query($sql);
+}
+
+
 ?>
 <!DOCTYPE html>
 
@@ -199,6 +241,23 @@ Cerrar Sesión
 
 </div>
 
+<form method="GET">
+
+    <input
+        type="text"
+        name="buscar"
+        placeholder="Buscar producto o categoría..."
+    >
+
+    <button type="submit">
+        🔎 Buscar
+    </button>
+
+    <a href="inventario.php">
+        Limpiar
+    </a>
+
+</form>
 <table>
 
 <thead>
