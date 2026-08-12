@@ -98,7 +98,7 @@ $resultado = $conn->query($sql);
 
     </div>
 
-    <a href="#"
+    <a href="nuevo_proveedor.php"
        style="background: #3b82f6;
               color: white;
               padding: 10px;
